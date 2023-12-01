@@ -30,7 +30,7 @@ class ExcelController extends Controller
                     'success' => false,
                     'message' => 'Wrong URL for articles or no JSON',
                 ];
-                response()->json($response, 400);
+                return response()->json($response, 400);
             }
         }
 
