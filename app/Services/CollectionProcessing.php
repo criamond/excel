@@ -21,8 +21,10 @@ class CollectionProcessing
 
         $i=0;
         foreach ($collection as $elem){
-            $arr_out[0][$i]=$elem->get(0);
-            $arr_out[1][$i]=$elem->get(1);
+            if ($elem->get(0) && $elem->get(1)) {
+                $arr_out[0][$i] = $elem->get(0);
+                $arr_out[1][$i] = $elem->get(1);
+            }
             $i++;
         }
         return $arr_out;
