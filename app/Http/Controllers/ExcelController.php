@@ -13,7 +13,7 @@ use App\Http\Controllers\Controller;
 
 class ExcelController extends Controller
 {
-    public function import(ExcelRequest $request)
+    public function articles(ExcelRequest $request)
     {
         if($request->file('file')) {
             $array = Excel::toArray(new FileImport, $request->file('file'));

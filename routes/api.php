@@ -20,5 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::controller(ExcelController::class)->group(function () {
-    Route::post('import', 'import');
+    Route::post('articles', 'articles');
 });
