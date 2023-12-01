@@ -8,6 +8,7 @@ class CollectionProcessing
     public function setCollection($collection)
     {
         $this->collection=$collection;
+        return $this;
     }
     public function process()
     {

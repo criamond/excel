@@ -34,8 +34,7 @@ class ExcelController extends Controller
             }
         }
 
-        $col_processing->setCollection($collection);
-        $arr_out=$col_processing->process();
+        $arr_out=$col_processing->setCollection($collection)->process();
 
         $export = new FileExport($arr_out);
 
