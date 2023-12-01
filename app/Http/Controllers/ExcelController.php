@@ -6,6 +6,7 @@ use App\Exports\FileExport;
 use App\Http\Requests\ExcelRequest;
 use App\Imports\FileImport;
 use App\Services\ArticlesServiceInterface;
+use App\Services\CollectionProcessing;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -17,14 +18,14 @@ use App\Http\Controllers\Controller;
 class ExcelController extends Controller
 {
 
-    public function articles(ExcelRequest $request, ArticlesServiceInterface $articles)
+    public function articles(ExcelRequest $request, ArticlesServiceInterface $articles, CollectionProcessing $col_processing)
     {
         if($request->file('file')) {
             $collection = Excel::toCollection(new FileImport, $request->file('file'));
             $collection=$collection->first();
         } else {
             $collection=$articles->getArticles();
-            if(!$collection) {
+            if($collection->isEmpty()) {
                 $response = [
                     'success' => false,
                     'message' => 'Wrong URL for articles or no JSON',
@@ -33,20 +34,8 @@ class ExcelController extends Controller
             }
         }
 
-        $collection=$collection->map(function($collection)
-        {
-            $collection['unixtime']=strtotime($collection[2]);
-            return $collection;
-        });
-
-        $collection=$collection->sortByDesc('unixtime');
-
-        $i=0;
-        foreach ($collection as $elem){
-            $arr_out[0][$i]=$elem->get(0);
-            $arr_out[1][$i]=$elem->get(1);
-            $i++;
-        }
+        $col_processing->setCollection($collection);
+        $arr_out=$col_processing->process();
 
         $export = new FileExport($arr_out);
 
