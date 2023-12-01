@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Services;
+use Illuminate\Support\Collection;
 
 use Exception;
 
 class GetArticlesService implements ArticlesServiceInterface
 {
-public function getArticles():array
+public function getArticles():Collection
 {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -19,14 +20,16 @@ public function getArticles():array
             $arr  = json_decode(json_encode($json), true);
 
             foreach ($arr as $article) {
-                $array_articles[] = [$article['title']['rendered'], $article['content']['rendered'], $article['date']];
+                $array_articles[] = collect([$article['title']['rendered'], $article['content']['rendered'], $article['date']]);
             }
         }
 
     } catch (Exception $e){
-        return [];
+        return collect([]);
     }
 
-    return $array_articles;
+    $articles_collection=collect($array_articles);
+
+    return $articles_collection;
 }
 }
